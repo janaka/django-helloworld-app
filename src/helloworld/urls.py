@@ -15,9 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from django.shortcuts import render
+from datetime import datetime
+
+def index(request):
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    context = {
+        'current_datetime': current_datetime
+    }
+    return render(request, 'index.html', context)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('home.urls')),
+    path('', index, name='index'),
 ]

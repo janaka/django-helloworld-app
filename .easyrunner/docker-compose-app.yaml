@@ -1,0 +1,21 @@
+name: easyrunner
+services:
+  django-helloworld-app: # this name will be used as part of the service name and dns name
+    # fully qualified registry name when the container is built and published remotely (aka deploy flow B)
+    image: localhost/django-helloworld-app:latest # registry "localhost" when the container is built locally on the server (aka deploy flow A)
+    environment:
+      - PORT=8000
+      - DJANGO_SETTINGS_MODULE=helloworld.settings
+    restart: unless-stopped
+    networks:
+      - easyrunner_proxy_network
+    labels:
+      xyz.easyrunner.appFramework: "standardbackend" # used to optimise the Caddy config (standardbackend | nextjs)
+      xyz.easyrunner.appIsPublic: true # default false. true means the app is accessible from the internet via Caddy
+      xyz.easyrunner.appContainerInternalPort: 8000 # default 3000. the port the app process is listening on inside the container. Caddy will be configured to forward requests to this port
+
+networks:
+  easyrunner_proxy_network:
+    name: easyrunner_proxy_network
+    external: true
+    driver: bridge

@@ -30,8 +30,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY src/ .
 
-# Create directory for static files
-RUN mkdir -p /app/staticfiles
+# Run collectstatic to gather static files
+RUN python manage.py collectstatic --noinput
 
 # Change ownership to django user
 RUN chown -R django:django /app
